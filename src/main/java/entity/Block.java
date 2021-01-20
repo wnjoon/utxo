@@ -1,6 +1,6 @@
 package entity;
 
-import util.CryptoUtil;
+import service.CryptoUtil;
 
 import java.util.ArrayList;
 import java.util.Date;

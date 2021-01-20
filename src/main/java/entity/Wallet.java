@@ -12,16 +12,13 @@ public class Wallet {
 
     private PrivateKey  privateKey;
     private PublicKey   publicKey;
+    // 지갑에 해당하는 UTXO 리스트
+    //private HashMap<String, UTXO> my_utxos;
+    private ArrayList<UTXO> my_utxos;
 
     public Wallet() {
         generateKeyPair();
     }
-
-    // 지갑에 해당하는 UTXO 리스트
-    private HashMap<String, UTXO> my_utxos = new HashMap<>();
-
-    // 지갑에 해당하는 UTXO들 중, 사용 될(Transaction input) 상태의 UTXO
-    private HashMap<String, UTXO> input = new HashMap<>();
 
     // 지갑의 PrivateKey & PublicKey 쌍 생성
     public void generateKeyPair() {
@@ -45,43 +42,51 @@ public class Wallet {
     public PublicKey getPublicKey() {
         return publicKey;
     }
-
-    // 본인 계좌에 해당하는 UTXO 리스트 반환
-    public HashMap<String, UTXO> getWalletUTXO() {
-        return my_utxos;
+    // 본인의 비밀번호(PrivateKey) 반환
+    public PrivateKey getPrivateKey() {
+        return privateKey;
     }
 
     // 본인의 잔액을 확인해주는 부분
     public float getBalance() {
         float total = 0;
+        my_utxos = new ArrayList<>();
         for (Map.Entry<String, UTXO> entry: Main.utxos.entrySet()){
             UTXO utxo = entry.getValue();
             if(utxo.getReceiver() == publicKey) {
-                my_utxos.put(utxo.getId(), utxo);
                 total += utxo.getAmount();
+                my_utxos.add(utxo);
             }
         }
         return total;
     }
 
     // 나의 지갑에서 상대방에게 송금하는 트랜잭션을 생성
-    public Transaction sendTransaction(PublicKey receiver, float amount) {
+    public boolean send(PublicKey receiver, float amount) {
         float amountToSend = 0;
-        ArrayList<String> inputIds = new ArrayList<>();
-        HashMap<String, UTXO> inputs = new HashMap<>();
-        for (Map.Entry<String, UTXO> entry : my_utxos.entrySet()){
-            UTXO utxo = entry.getValue();
+        ArrayList<UTXO> inputs = new ArrayList<>();
+        for(UTXO utxo : my_utxos) {
             amountToSend += utxo.getAmount();
-            inputIds.add(utxo.getId());
+            inputs.add(utxo);
             if(amountToSend >= amount) break;
         }
+//        for (Map.Entry<String, UTXO> entry : my_utxos.entrySet()) {
+//            UTXO utxo = entry.getValue();
+//            amountToSend += utxo.getAmount();
+//            inputs.add(utxo);
+//            if (amountToSend >= amount) break;
+//        }
 
-        Transaction transaction = new Transaction(publicKey, receiver, amount, inputIds);
+        Transaction transaction = new Transaction(publicKey, receiver, amount, inputs);
         transaction.generateSignature(privateKey);
 
-        for(TransactionInput input: inputs){
-            UTXO_Wallet.remove(input.transactionOutputId);
+        if(transaction.process()) {
+            return true;
         }
+        return false;
+    }
 
-        return newTransaction;
+    // [TODO]전체 UTXO 중에서 지갑에 해당하는 목록을 동기화하는 부분 (추후 개발)
+    private void synchronizeWallet() {
+    }
 }

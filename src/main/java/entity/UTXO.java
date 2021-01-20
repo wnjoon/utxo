@@ -1,6 +1,6 @@
 package entity;
 
-import util.CryptoUtil;
+import service.CryptoUtil;
 
 import java.security.PublicKey;
 
@@ -29,5 +29,15 @@ public class UTXO {
 
     public float getAmount() {
         return amount;
+    }
+
+    @Override
+    public String toString() {
+        return "UTXO{" +
+                "id='" + id + '\'' +
+                ", receiver=" + receiver +
+                ", amount=" + amount +
+                ", transactionId='" + transactionId + '\'' +
+                '}';
     }
 }
