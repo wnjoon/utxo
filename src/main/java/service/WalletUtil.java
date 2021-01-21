@@ -6,7 +6,6 @@ import entity.UTXO;
 import entity.Wallet;
 import main.Main;
 
-import java.lang.reflect.Array;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,17 +18,11 @@ public class WalletUtil {
 
     public Wallet createGenesisWallet(float amount) {
         Wallet  genesisWallet   = makeWallet("genesis");
-        Main.utxos.put("0", new UTXO(genesisWallet.getPublicKey(), amount, "0"));
+        UTXO    genesisUTXO     = new UTXO(genesisWallet.getPublicKey(), amount, "0");
+        Main.utxos.put(genesisUTXO.getId(), genesisUTXO);
 
         Block block = new Block(new ArrayList<Transaction>(), "0");
         Main.blockchain.add(block);
-//        ArrayList<Transaction> transactions = new ArrayList<>();
-//        Transaction transaction = genesisWallet.send(genesisWallet.getPublicKey(), amount);
-//        if(transaction != null) {
-//            transactions.add(transaction);
-//            Block block = new Block(transactions, "0");
-//            Main.blockchain.add(block);
-//        }
         return genesisWallet;
     }
 

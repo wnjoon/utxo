@@ -27,16 +27,16 @@ public class Main {
         Wallet genesisWallet    = walletUtil.createGenesisWallet(1000f);
         Wallet peter            = walletUtil.makeWallet("peter");
 
-        walletUtil.sendMoneyTo(genesisWallet, peter, 500f);
+        walletUtil.sendMoneyTo(genesisWallet, peter, 500f);    //genesis 500,
 
-//        Wallet alice            = walletUtil.makeWallet("alice");
-//        walletUtil.sendMoneyTo(peter, alice, 300f);
-//
-//        Wallet james            = walletUtil.makeWallet("james");
-//        walletUtil.sendMoneyTo(genesisWallet, james, 100f);
-//
-//        Wallet bob            = walletUtil.makeWallet("bob");
-//        walletUtil.sendMoneyTo(genesisWallet, bob, 100f);
+        Wallet alice            = walletUtil.makeWallet("alice"); // peter 200
+        walletUtil.sendMoneyTo(peter, alice, 300f);
+
+        Wallet james            = walletUtil.makeWallet("james"); // james 100
+        walletUtil.sendMoneyTo(alice, james, 100f);
+
+        Wallet bob            = walletUtil.makeWallet("bob");   // alice 50 bob 150
+        walletUtil.sendMoneyTo(alice, bob, 150f);
 
 
         System.out.println("============== Summary ==============");

@@ -2,11 +2,9 @@ package entity;
 
 import main.Main;
 import service.CryptoUtil;
-import service.WalletUtil;
 
 import java.security.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Transaction {
@@ -33,18 +31,6 @@ public class Transaction {
     public String getTransactionId() {
         return transactionId;
     }
-    public PublicKey getSender() {
-        return sender;
-    }
-    public PublicKey getReceiver() {
-        return receiver;
-    }
-    public float getAmount() {
-        return amount;
-    }
-    public byte[] getSignature() {
-        return signature;
-    }
     
     // 서명값 생성
     public void generateSignature(PrivateKey privateKey) {
@@ -59,7 +45,19 @@ public class Transaction {
         String data = util.getStringFromKey(sender)
                 + util.getStringFromKey(receiver)
                 + amount;
-        return util.verifyECDSASig(sender, data, signature);
+        return verifyECDSASig(sender, data, signature);
+    }
+
+    // Verifies a String signature
+    public boolean verifyECDSASig(PublicKey publicKey, String data, byte[] signature) {
+        try {
+            Signature ecdsaVerify = Signature.getInstance("ECDSA", "BC");
+            ecdsaVerify.initVerify(publicKey);
+            ecdsaVerify.update(data.getBytes());
+            return ecdsaVerify.verify(signature);
+        }catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // 트랜잭션의 hash값 생성

@@ -43,31 +43,7 @@ public class CryptoUtil {
         return output;
     }
 
-    // Verifies a String signature
-    public boolean verifyECDSASig(PublicKey publicKey, String data, byte[] signature) {
-        try {
-            Signature ecdsaVerify = Signature.getInstance("ECDSA", "BC");
-            ecdsaVerify.initVerify(publicKey);
-            ecdsaVerify.update(data.getBytes());
-            return ecdsaVerify.verify(signature);
-        }catch(Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    public boolean verifySignature(Transaction transaction) {
-        String data = getStringFromKey(transaction.getSender())
-                + getStringFromKey(transaction.getReceiver())
-                + Float.toString(transaction.getAmount());
-        return verifyECDSASig(transaction.getSender(), data, transaction.getSignature());
-    }
-
-    public byte[] generateSignature(PrivateKey privateKey, Transaction transaction) {
-        String data = getStringFromKey(transaction.getSender())
-                + getStringFromKey(transaction.getReceiver())
-                + Float.toString(transaction.getAmount());
-        return applyECDSASig(privateKey, data);
-    }
 
     // PrivateKey 또는 PublicKey -> String으로 반환
     public String getStringFromKey(Key key) {
