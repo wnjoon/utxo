@@ -63,6 +63,13 @@ public class Wallet {
 
     // 나의 지갑에서 상대방에게 송금하는 트랜잭션을 생성
     public boolean send(PublicKey receiver, float amount) {
+
+        // balance check
+        if(getBalance() < amount) {
+            System.out.println("[ERROR] Not enough money in your utxos");
+            return false;
+        }
+
         float amountToSend = 0;
         ArrayList<UTXO> inputs = new ArrayList<>();
         for(UTXO utxo : my_utxos) {
