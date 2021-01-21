@@ -4,22 +4,20 @@ import main.Main;
 import service.CryptoUtil;
 import service.WalletUtil;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class Block {
     private String   hash;           // 현재 블럭의 해시값
-    private String   previousHash ;  // 이전 블럭의 해시값
+    private final String   previousHash ;  // 이전 블럭의 해시값
     private String   data;           // 블럭에 있는 데이터
     private int      nonce;          // 블럭을 생성하는데 소요된 횟수(해시값을 찾는데 총 확인한 횟수)
-    private long     timeStamp;      // 블럭 생성일시
+    private final long     timeStamp;      // 블럭 생성일시
     private String   merkleRoot;     // 머클루트 (TODO: 확인필요)
 
     // 블록에 담긴 트랜잭션의 리스트 (추후 머클루트 생성에 필요)
-    private ArrayList<Transaction> transactions = new ArrayList<>();
+    private final ArrayList<Transaction> transactions;
 
     public Block(ArrayList<Transaction> transactions) {
         this.hash = calculateBlockHash();   // 기본적으로 생성되는 블록 해시
@@ -79,7 +77,7 @@ public class Block {
 
     // 블록의 해시값 계산
     private String calculateBlockHash() {
-        return (new CryptoUtil()).applySha256(previousHash + Long.toString(timeStamp) + Integer.toString(nonce) + merkleRoot);
+        return (new CryptoUtil()).applySha256(previousHash + timeStamp + nonce + merkleRoot);
     }
 
     // 머클루트 생성 후 변수(merkleroot)에 할당

@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class UtxoUtil {
 
-    public static void getAllUTXOs() {
+    public void getAllUTXOs() {
         System.out.println("[UTXO information]");
         int index = 0;
         for(Map.Entry<String, UTXO> entry : Main.utxos.entrySet()) {
