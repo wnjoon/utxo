@@ -3,6 +3,15 @@ Java 기반으로 UTXO 기반의 샘플 블록체인 프로그램을 개발한�
 
 
 
+### History
+
+- 초기 버전 업로드
+- Block 생성 시간 측정하는 부분 추가 -> BlockUtil 내부에 작성, 실제 측정은 WalletUtil에서 진행
+
+<br/>
+
+
+
 ### TDL
 
 - 여러 UTXO 중에서 해당 거래에 사용할 UTXO를 가장 최소로 선택하는 알고리즘 구현
@@ -130,7 +139,7 @@ public static void main(String[] args) {
         walletUtil.printUserList();
         utxoUtil.getAllUTXOs();
         blockUtil.printBlockchainInfo();
-
+        BlockUtil.getAverage();
     }
 ```
 
@@ -143,50 +152,50 @@ public static void main(String[] args) {
 ```shell
 ============== Summary ==============
 [User list information]
-[0] Username : peter, PublicKey : EC Public Key
-            X: 1bb15da4de1e513e1483a7c3ef10e65c5938cea8dd139db8
-            Y: f3a936e5ffb1611922be838f7b9ef7093b83e15a5ac46210
+[0] Username : genesis, PublicKey : EC Public Key
+            X: 65f5f1d59d0e0493878a268362f08039b584edd75e18c388
+            Y: d1f6a654a6417954bd63f28b18d64452a1ac630224b25e36
 
-[1] Username : alice, PublicKey : EC Public Key
-            X: d996e37ecd109f8b3cef16a576fad796d992561ef9f0e283
-            Y: f80eee5fe8471ef000398c425357bafb536913ed4918f159
+[1] Username : peter, PublicKey : EC Public Key
+            X: 7cdb55d8f472a355b68418bfa7099f5883e83548a3f5e202
+            Y: cb19bf0968a2245bbe877194a345885e6e7bc1f79e027e39
 
-[2] Username : genesis, PublicKey : EC Public Key
-            X: 52cc41183eafd378ca46c3258d01bc01b0d71222c8da9c9f
-            Y: 65ae0c2f6d406f3473a3040b880192a3fceb2f58864f1603
+[2] Username : alice, PublicKey : EC Public Key
+            X: 23f0fdaacd30a8464168de2859ba7e32df5cae060da43694
+            Y: c1ea8f6a0eb8d05a884007c7887c898f4149e1cec9fbea4f
 
-[3] Username : james, PublicKey : EC Public Key
-            X: dc61933616a959f393786be0767520ca512d2529dec31456
-            Y: de2399ab3ca5c776bb701bbffb6b84fe4eb5835c88355b41
+[3] Username : bob, PublicKey : EC Public Key
+            X: 41824c6bf1158ba63eee87b8d3f3d69fa9192e750fb9e9af
+            Y: 2bdf9b562928e1f628fc2ffc530ec9b9e6cff664e42b9d41
 
-[4] Username : bob, PublicKey : EC Public Key
-            X: ceba6539c86139550c0060d4393b06d46ff0d67171235328
-            Y: 4512019189de64f6d728b2c24585cb27efdfab9753d9b5dd
+[4] Username : james, PublicKey : EC Public Key
+            X: 87077b963b76233307018fef7eba8f1fe0ee8d9189a011c
+            Y: 96308a9d75d78b221643a86fee536ef188dc76b274af7a3a
 
 
 
 
 [UTXO information]
-[0] UTXO{id='8ce654ade680b6861d0c6d594e9abd8af5398068c17c80abb44c487a53ec91c2', receiver=EC Public Key
-            X: d996e37ecd109f8b3cef16a576fad796d992561ef9f0e283
-            Y: f80eee5fe8471ef000398c425357bafb536913ed4918f159
-, amount=50.0, transactionId='e2964dcaf7a1a082ef94e068e3ac5f722d522c81b2b1e3839063b902a76256d5'}
-[1] UTXO{id='0a84d6f1c94851d5b9d5e39ca2d0955b1f528c5df06c812488d6e2da7db2ed25', receiver=EC Public Key
-            X: ceba6539c86139550c0060d4393b06d46ff0d67171235328
-            Y: 4512019189de64f6d728b2c24585cb27efdfab9753d9b5dd
-, amount=150.0, transactionId='e2964dcaf7a1a082ef94e068e3ac5f722d522c81b2b1e3839063b902a76256d5'}
-[2] UTXO{id='0880526370536a7d0f21949d3a94cbc78f7dac15da600e8a6ff21058524f9171', receiver=EC Public Key
-            X: 52cc41183eafd378ca46c3258d01bc01b0d71222c8da9c9f
-            Y: 65ae0c2f6d406f3473a3040b880192a3fceb2f58864f1603
-, amount=500.0, transactionId='798cb4449813730fdeb0ea2f817d2b253348849ac5472a235cd1afebed9e12c5'}
-[3] UTXO{id='c87d87f335733255fb7fe6e0ad99bb43a8bfd64f82d584d0e303ccb09abd45cd', receiver=EC Public Key
-            X: 1bb15da4de1e513e1483a7c3ef10e65c5938cea8dd139db8
-            Y: f3a936e5ffb1611922be838f7b9ef7093b83e15a5ac46210
-, amount=200.0, transactionId='a4321270ebad3053f7d91c4afeff9383ddc1103934b588742d538d5028f3c498'}
-[4] UTXO{id='dbd7ccebe2eeed38370cc8103b7ab80c92a569e7294c83288b9ad3425e2579ed', receiver=EC Public Key
-            X: dc61933616a959f393786be0767520ca512d2529dec31456
-            Y: de2399ab3ca5c776bb701bbffb6b84fe4eb5835c88355b41
-, amount=100.0, transactionId='84b960d2bd381fff8f0ea9699bcad1331dcad9c637337e534a43cb2a8d7063bc'}
+[0] UTXO{id='9b06b5f0f46e61acb43ddbcae4a3e87b738baae431c8117fe5fbb335e6e8f082', receiver=EC Public Key
+            X: 65f5f1d59d0e0493878a268362f08039b584edd75e18c388
+            Y: d1f6a654a6417954bd63f28b18d64452a1ac630224b25e36
+, amount=500.0, transactionId='cc15ad4e87cdc9d4bb8baa289724b1e4f0e44aa4a52fec78f71f03a016d576ba'}
+[1] UTXO{id='cda1e79e58c0761d98cdc18889da88cd0dd9c7b708fd59941757314643317451', receiver=EC Public Key
+            X: 7cdb55d8f472a355b68418bfa7099f5883e83548a3f5e202
+            Y: cb19bf0968a2245bbe877194a345885e6e7bc1f79e027e39
+, amount=200.0, transactionId='f126d50c5c3d12d6f353cd8e8480e712728f8a1f72eb3409fbdccd119a57e2e8'}
+[2] UTXO{id='dc849b3bf0a45634a04aec6fd0a3a7799eff174e17011276ceb56dbd9a8a7deb', receiver=EC Public Key
+            X: 23f0fdaacd30a8464168de2859ba7e32df5cae060da43694
+            Y: c1ea8f6a0eb8d05a884007c7887c898f4149e1cec9fbea4f
+, amount=50.0, transactionId='91e957ae9f210f99cd538648bbe5ca29e5c1598667c06510158f7bb607ed2303'}
+[3] UTXO{id='ee3404f6ee1af6587f58053d1a5767f82db92540204aad8d2eddca82288423ed', receiver=EC Public Key
+            X: 87077b963b76233307018fef7eba8f1fe0ee8d9189a011c
+            Y: 96308a9d75d78b221643a86fee536ef188dc76b274af7a3a
+, amount=100.0, transactionId='35b1b0b576057df960fe521b9fa6de85a92cb34c2fb1a9d564a167bfe3798aac'}
+[4] UTXO{id='aa9b9e6d78a2ea9ac78d9be3e0ef8dc050a8683d850910a70634ff1a1fc9a9eb', receiver=EC Public Key
+            X: 41824c6bf1158ba63eee87b8d3f3d69fa9192e750fb9e9af
+            Y: 2bdf9b562928e1f628fc2ffc530ec9b9e6cff664e42b9d41
+, amount=150.0, transactionId='91e957ae9f210f99cd538648bbe5ca29e5c1598667c06510158f7bb607ed2303'}
 
 
 
@@ -196,72 +205,77 @@ Block[0] {
 	- previousHash=0
 	- nonce=0
 	- merkleRoot=
-	- timeStamp=1611729987675
+	- timeStamp=1611732600534
 	- data=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 	- transactions=
 
 }
 Block[1] {
-	- hash=000b4e5e3cf13bd6b45077bb212a980c38f810639a96aaa3f3b83a87e6dc814b
+	- hash=0004a2f0b3025fa473b8c0ccf395e78aff4ae2a1d3383e29fd8b65c0f8725569
 	- previousHash=8e89903f3bc90cff302dcb7d29cbb7b8570d3a5071123191bd5071a47f541e51
-	- nonce=1837
-	- merkleRoot=798cb4449813730fdeb0ea2f817d2b253348849ac5472a235cd1afebed9e12c5
-	- timeStamp=1611729988100
-	- data=f9fd84b440efb576d76139b28deec82573750b16ba50ebbc8caffa10cb56f529
+	- nonce=66
+	- merkleRoot=cc15ad4e87cdc9d4bb8baa289724b1e4f0e44aa4a52fec78f71f03a016d576ba
+	- timeStamp=1611732600882
+	- data=8299adebdc9bde1c4bbb3b53bd0d5cd820f05e7711b09c2fa936555fa76ca8cf
 	- transactions=
 		- [0]
-			- transactionId=798cb4449813730fdeb0ea2f817d2b253348849ac5472a235cd1afebed9e12c5
+			- transactionId=cc15ad4e87cdc9d4bb8baa289724b1e4f0e44aa4a52fec78f71f03a016d576ba
 			- sender=genesis
 			- receiver=peter
 			- amount=500.0
 
 }
 Block[2] {
-	- hash=000f4c5d7cbeb64b8cbae925a614c658ebb56dafc777496cc5cd5da798774840
-	- previousHash=000b4e5e3cf13bd6b45077bb212a980c38f810639a96aaa3f3b83a87e6dc814b
-	- nonce=3094
-	- merkleRoot=a4321270ebad3053f7d91c4afeff9383ddc1103934b588742d538d5028f3c498
-	- timeStamp=1611729988235
-	- data=ffabc60ebf68246546e9a529ae1484b8cacebf10628cbe57214acbbb30965a8e
+	- hash=000207053a7b91751de1724930ea51cffd1b53e3bc840bbaf677ce270ab28a2b
+	- previousHash=0004a2f0b3025fa473b8c0ccf395e78aff4ae2a1d3383e29fd8b65c0f8725569
+	- nonce=8758
+	- merkleRoot=f126d50c5c3d12d6f353cd8e8480e712728f8a1f72eb3409fbdccd119a57e2e8
+	- timeStamp=1611732600950
+	- data=7e2dd37bf2cdb842b31a0a58cb8b44a3aa4f1438048ce219db0941a3b95e17d7
 	- transactions=
 		- [0]
-			- transactionId=a4321270ebad3053f7d91c4afeff9383ddc1103934b588742d538d5028f3c498
+			- transactionId=f126d50c5c3d12d6f353cd8e8480e712728f8a1f72eb3409fbdccd119a57e2e8
 			- sender=peter
 			- receiver=alice
 			- amount=300.0
 
 }
 Block[3] {
-	- hash=0001e229a7fca60a0312a0db1eb6d2b97092e8e0ddc35f62a0f60e5f401d1c87
-	- previousHash=000f4c5d7cbeb64b8cbae925a614c658ebb56dafc777496cc5cd5da798774840
-	- nonce=8553
-	- merkleRoot=84b960d2bd381fff8f0ea9699bcad1331dcad9c637337e534a43cb2a8d7063bc
-	- timeStamp=1611729988369
-	- data=6ce8ad6069b271208b59e88a89c71eae8fe7805f2e7b5767fbef3438f3da9f07
+	- hash=000fe331fb1a0af32fa6b64574cfe72e50d8db46070178be9dd1d940f1c8197b
+	- previousHash=000207053a7b91751de1724930ea51cffd1b53e3bc840bbaf677ce270ab28a2b
+	- nonce=6409
+	- merkleRoot=35b1b0b576057df960fe521b9fa6de85a92cb34c2fb1a9d564a167bfe3798aac
+	- timeStamp=1611732601123
+	- data=f57884ad874defd981e426daf96f57c41820c573f576d4813fd630a206dececa
 	- transactions=
 		- [0]
-			- transactionId=84b960d2bd381fff8f0ea9699bcad1331dcad9c637337e534a43cb2a8d7063bc
+			- transactionId=35b1b0b576057df960fe521b9fa6de85a92cb34c2fb1a9d564a167bfe3798aac
 			- sender=alice
 			- receiver=james
 			- amount=100.0
 
 }
 Block[4] {
-	- hash=00034d30d387ac79bf6c39fc07e57dd73c92099f04516311e075403d500ed70f
-	- previousHash=0001e229a7fca60a0312a0db1eb6d2b97092e8e0ddc35f62a0f60e5f401d1c87
-	- nonce=4432
-	- merkleRoot=e2964dcaf7a1a082ef94e068e3ac5f722d522c81b2b1e3839063b902a76256d5
-	- timeStamp=1611729988542
-	- data=28a379ccc83b2c708586fa2f61a3c20a41a17a4c2344b74571f11ead094e2b34
+	- hash=000fa5a58c943b496c187017b1d09d4556f25b70fc662034e04befd636e2cc45
+	- previousHash=000fe331fb1a0af32fa6b64574cfe72e50d8db46070178be9dd1d940f1c8197b
+	- nonce=317
+	- merkleRoot=91e957ae9f210f99cd538648bbe5ca29e5c1598667c06510158f7bb607ed2303
+	- timeStamp=1611732601210
+	- data=70c5f1f391617ddf62db8a8bdaaa2c8aa3f6981ae318583d21c2ed22bf7051eb
 	- transactions=
 		- [0]
-			- transactionId=e2964dcaf7a1a082ef94e068e3ac5f722d522c81b2b1e3839063b902a76256d5
+			- transactionId=91e957ae9f210f99cd538648bbe5ca29e5c1598667c06510158f7bb607ed2303
 			- sender=alice
 			- receiver=bob
 			- amount=150.0
 
 }
 
+
+[Block creation information]
+- Minimum Time : 3ms
+- Maximum Time : 155ms
+- Average Time : 61ms
 
 Process finished with exit code 0
 
