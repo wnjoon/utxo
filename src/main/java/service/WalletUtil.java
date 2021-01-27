@@ -36,9 +36,13 @@ public class WalletUtil {
         ArrayList<Transaction> transactions = new ArrayList<>();
         Transaction transaction = sender.send(receiver.getPublicKey(), amount);
         if(transaction != null) {
+            // Check block creation time
             transactions.add(transaction);
+            long start = System.currentTimeMillis();
             Block block = new Block(transactions);
             Main.blockchain.add(block);
+            long end = System.currentTimeMillis();
+            BlockUtil.blockCreateTime.add(end-start);
         }
     }
 

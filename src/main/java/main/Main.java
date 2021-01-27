@@ -78,6 +78,6 @@ public class Main {
         walletUtil.printUserList();
         utxoUtil.getAllUTXOs();
         blockUtil.printBlockchainInfo();
-
+        BlockUtil.getAverage();
     }
 }
