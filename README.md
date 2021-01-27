@@ -1,6 +1,8 @@
 # utxo
 Java 기반으로 UTXO 기반의 샘플 블록체인 프로그램을 개발한다.
 
+- 개념 참고: https://m.blog.naver.com/mage7th/221439829511
+
 
 
 ### History
