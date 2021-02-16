@@ -10,12 +10,13 @@ import service.WalletUtil;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Main {
 
     public static ArrayList<Block>      blockchain      = new ArrayList<>(); // 블록체인
     public static HashMap<String, UTXO> utxos           = new HashMap<>(); // UTXO
-    public static int                   difficulty      = 3;
+    public static int                   difficulty      = 3; //(new Random()).nextInt(5)+3;
 
     public static WalletUtil            walletUtil      = new WalletUtil(); // 지갑쪽 유틸리티
     public static BlockUtil             blockUtil       = new BlockUtil(); // 블록 관련 유틸리티
